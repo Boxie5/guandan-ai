@@ -9,7 +9,7 @@ class CardMode():
     THREE_WITH_TWO = 4 # 三带二
     THREE_TWO = 5 # 三连对
     TWO_THREE = 6 # 钢板
-    FIVE = 7 # 杂顺
+    FIVE = 7 # 杂顺p
     COLOR_FIVE = 8 # 同花顺
     FOUR_BOOM = 9 # 四炸
     FIVE_BOOM = 10 # 五炸
@@ -24,10 +24,19 @@ class CardMode():
         pass
 
     @classmethod
-    def get_card_mode(self, general, cards):
+    def get_card_mode(self, general, cards, prefer_mode = INVALID):
         cards.sort()
         print("、".join(map(lambda item: str(item), cards)))
         card_len = len(cards)
+
+        taylor_swift_count = 0
+        plain_cards = []
+        for c in cards:
+            if c.is_taylor_swift():
+                taylor_swift_count += 1
+            else:
+                plain_cards.append(c)
+
         if card_len == 1:
             return CardMode.SINGLE
         elif card_len == 2:
@@ -38,14 +47,6 @@ class CardMode():
             else:
                 return CardMode.INVALID
         elif card_len == 3:
-            taylor_swift_count = 0
-            plain_cards = []
-            for c in cards:
-                if c.is_taylor_swift():
-                    taylor_swift_count += 1
-                else:
-                    plain_cards.append(c)
-
             if taylor_swift_count == 2:
                 return CardMode.THREE
             elif taylor_swift_count == 1:
@@ -58,14 +59,6 @@ class CardMode():
             else:
                 return CardMode.INVALID
         elif card_len == 4:
-            taylor_swift_count = 0
-            plain_cards = []
-            for c in cards:
-                if c.is_taylor_swift():
-                    taylor_swift_count += 1
-                else:
-                    plain_cards.append(c)
-
             if taylor_swift_count == 2:
                 if CardMode.get_card_mode(general, plain_cards) == CardMode.TWO:
                     return CardMode.FOUR_BOOM
@@ -83,14 +76,6 @@ class CardMode():
             else :
                 return CardMode.INVALID
         elif card_len == 5:
-            taylor_swift_count = 0
-            plain_cards = []
-            for c in cards:
-                if c.is_taylor_swift():
-                    taylor_swift_count += 1
-                else:
-                    plain_cards.append(c)
-
             if taylor_swift_count == 0:
                 if cards[0].rank == cards[4].rank:
                     return CardMode.FIVE_BOOM
@@ -138,4 +123,68 @@ class CardMode():
                             return CardMode.FIVE
                     else:
                         return CardMode.INVALID
+            elif taylor_swift_count == 2:
+                if plain_cards[0].rank == plain_cards[2].rank:
+                    return CardMode.FIVE_BOOM
+                elif plain_cards[0].rank == plain_cards[1].rank and plain_cards[0].rank != plain_cards[2].rank:
+                    return CardMode.THREE_WITH_TWO
+                elif plain_cards[0].rank != plain_cards[1].rank and plain_cards[1].rank == plain_cards[2].rank:
+                    return CardMode.THREE_WITH_TWO
+                elif plain_cards[2].rank - plain_cards[0].rank < 5:
+                    if plain_cards[0].suit == plain_cards[1].suit and plain_cards[0].suit == plain_cards[2].suit:
+                        return CardMode.COLOR_FIVE
+                    else:
+                        return CardMode.FIVE
+                # 带A的顺子还就没有处理
+                return CardMode.INVALID
+        elif card_len == 6:
+            if taylor_swift_count == 0:
+                # 三联对
+                if plain_cards[0].rank == plain_cards[1].rank \
+                    and plain_cards[1].rank != plain_cards[2].rank \
+                        and plain_cards[2].rank == plain_cards[3].rank \
+                            and plain_cards[3].rank != plain_cards[4].rank \
+                                and plain_cards[4].rank == plain_cards[5].rank:
+                    if plain_cards[0].rank + 2 == plain_cards[4].rank:
+                        return CardMode.THREE_TWO
+                    else:
+                        return CardMode.INVALID
+                elif plain_cards[0].rank == plain_cards[1].rank \
+                    and plain_cards[1].rank == plain_cards[2].rank \
+                    and plain_cards[2].rank != plain_cards[3].rank \
+                    and plain_cards[3].rank == plain_cards[4].rank \
+                    and plain_cards[4].rank == plain_cards[5].rank:
+                    if plain_cards[0].rank + 1 == plain_cards[5].rank:
+                        return CardMode.TWO_THREE
+                    else:
+                        return CardMode.INVALID
+                elif plain_cards[0].rank == plain_cards[5].rank:
+                    return CardMode.SIX_BOOM
+            elif taylor_swift_count == 1:
+                if plain_cards[0].rank + 2 == plain_cards[4].rank:
+                    if plain_cards[1].rank != plain_cards[2].rank or plain_cards[2].rank != plain_cards[3].rank:
+                        return CardMode.THREE_TWO
+                    else:
+                        return CardMode.INVALID
+                if plain_cards[0].rank + 1 == plain_cards[4].rank:
+                    if plain_cards[1].rank != plain_cards[2].rank or plain_cards[2].rank != plain_cards[3].rank:
+                        return CardMode.TWO_THREE
+                    else:
+                        return CardMode.INVALID
+                if plain_cards[0].rank == plain_cards[4].rank:
+                    return CardMode.SIX_BOOM
+            elif taylor_swift_count == 2:
+                if plain_cards[0].rank + 2 == plain_cards[3].rank:
+                    if plain_cards[1].rank != plain_cards[2].rank or plain_cards[2].rank != plain_cards[3].rank:
+                        return CardMode.THREE_TWO
+                    else:
+                        return CardMode.INVALID
+                if plain_cards[0].rank + 1 == plain_cards[3].rank:
+                    if plain_cards[1].rank != plain_cards[2].rank or plain_cards[2].rank != plain_cards[3].rank:
+                        return CardMode.TWO_THREE
+                    else:
+                        return CardMode.INVALID
+                if plain_cards[0].rank == plain_cards[3].rank:
+                    return CardMode.SIX_BOOM
 
+        return CardMode.INVALID

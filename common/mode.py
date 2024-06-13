@@ -71,6 +71,7 @@ class CardMode():
                     return CardMode.INVALID
             elif cards[0].rank == cards[1].rank and cards[0].rank == cards[2].rank and cards[0].rank == cards[3].rank:
                 return CardMode.FOUR_BOOM
+            # 天王炸
             elif cards[0].rank == 16 and cards[1].rank == 16 and cards[2].rank == 17 and cards[3].rank == 17:
                 return CardMode.KING_BOOM
             else :
@@ -138,6 +139,7 @@ class CardMode():
                 # 带A的顺子还就没有处理
                 return CardMode.INVALID
         elif card_len == 6:
+            # TODO 有A的三联对和钢板
             if taylor_swift_count == 0:
                 # 三联对
                 if plain_cards[0].rank == plain_cards[1].rank \
@@ -149,6 +151,7 @@ class CardMode():
                         return CardMode.THREE_TWO
                     else:
                         return CardMode.INVALID
+                # 钢板
                 elif plain_cards[0].rank == plain_cards[1].rank \
                     and plain_cards[1].rank == plain_cards[2].rank \
                     and plain_cards[2].rank != plain_cards[3].rank \
@@ -158,33 +161,74 @@ class CardMode():
                         return CardMode.TWO_THREE
                     else:
                         return CardMode.INVALID
+                # 六炸
                 elif plain_cards[0].rank == plain_cards[5].rank:
                     return CardMode.SIX_BOOM
             elif taylor_swift_count == 1:
+                # 三联对
                 if plain_cards[0].rank + 2 == plain_cards[4].rank:
                     if plain_cards[1].rank != plain_cards[2].rank or plain_cards[2].rank != plain_cards[3].rank:
                         return CardMode.THREE_TWO
                     else:
                         return CardMode.INVALID
+                # 钢板
                 if plain_cards[0].rank + 1 == plain_cards[4].rank:
                     if plain_cards[1].rank != plain_cards[2].rank or plain_cards[2].rank != plain_cards[3].rank:
                         return CardMode.TWO_THREE
                     else:
                         return CardMode.INVALID
+                # 六炸
                 if plain_cards[0].rank == plain_cards[4].rank:
                     return CardMode.SIX_BOOM
             elif taylor_swift_count == 2:
+                # 三联对
                 if plain_cards[0].rank + 2 == plain_cards[3].rank:
                     if plain_cards[1].rank != plain_cards[2].rank or plain_cards[2].rank != plain_cards[3].rank:
                         return CardMode.THREE_TWO
                     else:
                         return CardMode.INVALID
+                # 钢板
                 if plain_cards[0].rank + 1 == plain_cards[3].rank:
                     if plain_cards[1].rank != plain_cards[2].rank or plain_cards[2].rank != plain_cards[3].rank:
                         return CardMode.TWO_THREE
                     else:
                         return CardMode.INVALID
+                # 六炸
                 if plain_cards[0].rank == plain_cards[3].rank:
                     return CardMode.SIX_BOOM
+        elif card_len == 7:
+            if taylor_swift_count == 0:
+                if plain_cards[0].rank == plain_cards[6].rank:
+                    return CardMode.SEVEN_BOOM
+                else:
+                    return CardMode.INVALID
+            elif taylor_swift_count == 1:
+                if plain_cards[0].rank == plain_cards[5].rank:
+                    return CardMode.SEVEN_BOOM
+                else:
+                    return CardMode.INVALID
+            elif taylor_swift_count == 2:
+                if plain_cards[0].rank == plain_cards[4].rank:
+                    return CardMode.SEVEN_BOOM
+                else:
+                    return CardMode.INVALID
+        elif card_len == 8:
+            if taylor_swift_count == 0:
+                if plain_cards[0].rank == plain_cards[7].rank:
+                    return CardMode.EIGHT_BOOM
+                else:
+                    return CardMode.INVALID
+            elif taylor_swift_count == 1:
+                if plain_cards[0].rank == plain_cards[6].rank:
+                    return CardMode.EIGHT_BOOM
+                else:
+                    return CardMode.INVALID
+            elif taylor_swift_count == 2:
+                if plain_cards[0].rank == plain_cards[5].rank:
+                    return CardMode.EIGHT_BOOM
+                else:
+                    return CardMode.INVALID
+        else:
+            return CardMode.INVALID
 
         return CardMode.INVALID
